@@ -5,15 +5,18 @@
   "type": "module",
   "main": "./src/index.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./packages/core/src/index.ts",
+    "./core": "./packages/core/src/index.ts",
+    "./react": "./packages/react/src/index.ts"
   },
   "files": [
     "src",
     "README.md"
   ],
   "scripts": {
-    "test": "node --test",
-    "check": "node scripts/check-contract.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check-contract.mjs",
+    "build": "node scripts/build-smoke.mjs"
   },
   "keywords": [],
   "author": "StackForge User",

@@ -12,17 +12,7 @@ export const AGENT_GLOW_STATES = [
 ] as const;
 
 export type AgentGlowState = (typeof AGENT_GLOW_STATES)[number];
-
-export type AgentGlowTone =
-  | 'neutral'
-  | 'receptive'
-  | 'active'
-  | 'productive'
-  | 'caution'
-  | 'danger'
-  | 'positive'
-  | 'paused';
-
+export type AgentGlowTone = 'neutral' | 'receptive' | 'active' | 'productive' | 'caution' | 'danger' | 'positive' | 'paused';
 export type AgentGlowUrgency = 'none' | 'low' | 'medium' | 'high';
 
 export interface AgentGlowStateMeta {
@@ -33,19 +23,8 @@ export interface AgentGlowStateMeta {
   isTerminal: boolean;
 }
 
-export type AgentGlowEvent =
-  | { type: 'presence.state.set'; state: AgentGlowState; meta?: AgentGlowEventMeta }
-  | { type: 'presence.turn.started'; source?: 'user' | 'agent' | 'system'; runId?: string }
-  | { type: 'presence.turn.completed'; runId?: string }
-  | { type: 'presence.turn.interrupted'; runId?: string; reason?: string }
-  | ({ type: 'presence.audio.input' } & AgentGlowInput)
-  | ({ type: 'presence.audio.output' } & AgentGlowInput)
-  | { type: 'presence.tool.started'; toolName: string; runId?: string; message?: string }
-  | { type: 'presence.tool.completed'; toolName?: string; runId?: string; message?: string }
-  | { type: 'presence.tool.failed'; toolName?: string; runId?: string; recoverable?: boolean; message?: string }
-  | { type: 'presence.wait.started'; reason?: AgentGlowWaitReason | string; runId?: string; message?: string }
-  | { type: 'presence.blocked'; reason?: AgentGlowBlockedReason | string; runId?: string; message?: string }
-  | { type: 'presence.error'; recoverable?: boolean; runId?: string; message?: string };
+export type AgentGlowWaitReason = 'approval-required' | 'user-input' | 'rate-limit' | 'dependency' | 'scheduled-resume';
+export type AgentGlowBlockedReason = 'missing-permission' | 'missing-input' | 'tool-unavailable' | 'policy' | 'network';
 
 export interface AgentGlowEventMeta {
   runId?: string;
@@ -53,11 +32,10 @@ export interface AgentGlowEventMeta {
   message?: string;
   reason?: string;
   progress?: number;
+  source?: 'user' | 'agent' | 'system';
+  recoverable?: boolean;
   [key: string]: unknown;
 }
-
-export type AgentGlowWaitReason = 'approval-required' | 'user-input' | 'rate-limit' | 'dependency' | 'scheduled-resume';
-export type AgentGlowBlockedReason = 'missing-permission' | 'missing-input' | 'tool-unavailable' | 'policy' | 'network';
 
 export interface AgentGlowInput {
   speechLevel?: number;
@@ -67,12 +45,26 @@ export interface AgentGlowInput {
   progress?: number;
 }
 
-export type AgentGlowPreset = 'orb' | 'waveform-halo' | 'constellation' | 'console-pulse' | 'minimal-dot-field';
+export type AgentGlowEvent =
+  | { type: 'presence.state.set'; state: AgentGlowState; meta?: AgentGlowEventMeta }
+  | { type: 'presence.turn.started'; source?: 'user' | 'agent' | 'system'; runId?: string; message?: string }
+  | { type: 'presence.turn.completed'; runId?: string; message?: string }
+  | { type: 'presence.turn.interrupted'; runId?: string; reason?: string; message?: string }
+  | ({ type: 'presence.audio.input' } & AgentGlowInput)
+  | ({ type: 'presence.audio.output' } & AgentGlowInput)
+  | { type: 'presence.tool.started'; toolName: string; runId?: string; message?: string }
+  | { type: 'presence.tool.completed'; toolName?: string; runId?: string; message?: string }
+  | { type: 'presence.tool.failed'; toolName?: string; runId?: string; recoverable?: boolean; message?: string }
+  | { type: 'presence.wait.started'; reason?: AgentGlowWaitReason | string; runId?: string; message?: string }
+  | { type: 'presence.blocked'; reason?: AgentGlowBlockedReason | string; runId?: string; message?: string }
+  | { type: 'presence.error'; recoverable?: boolean; runId?: string; message?: string };
 
+export type AgentGlowPreset = 'orb' | 'waveform-halo' | 'constellation' | 'console-pulse' | 'minimal-dot-field';
 export type AgentGlowMood = 'calm' | 'focused' | 'energetic' | 'urgent' | 'celebratory';
 export type AgentGlowTempo = 'slow' | 'measured' | 'brisk' | 'rapid';
 export type AgentGlowRadius = 'soft' | 'balanced' | 'sharp';
 export type AgentGlowContrast = 'auto' | 'standard' | 'high';
+export type AgentGlowQuality = 'auto' | 'high' | 'balanced' | 'low-power';
 
 export interface AgentGlowPalette {
   background?: string;
@@ -86,10 +78,28 @@ export interface AgentGlowPalette {
   text?: string;
 }
 
+export interface NormalizedAgentGlowPalette {
+  background: string;
+  surface: string;
+  accent: string;
+  accentSecondary: string;
+  success: string;
+  warning: string;
+  danger: string;
+  muted: string;
+  text: string;
+}
+
 export interface AgentGlowMotionTokens {
   intensity?: number;
   tempo?: AgentGlowTempo;
   reduced?: boolean;
+}
+
+export interface NormalizedAgentGlowMotionTokens {
+  intensity: number;
+  tempo: AgentGlowTempo;
+  reduced: boolean;
 }
 
 export interface AgentGlowBrandTokens {
@@ -111,16 +121,29 @@ export interface AgentGlowTheme {
   brand?: AgentGlowBrandTokens;
 }
 
+export interface NormalizedAgentGlowTheme {
+  palette: NormalizedAgentGlowPalette;
+  mood: AgentGlowMood;
+  motion: NormalizedAgentGlowMotionTokens;
+  shape: AgentGlowPreset;
+  density: number;
+  glow: number;
+  radius: AgentGlowRadius;
+  contrast: AgentGlowContrast;
+  brand?: AgentGlowBrandTokens;
+}
+
 export interface AgentGlowSnapshot {
   state: AgentGlowState;
   label: string;
   tone: AgentGlowTone;
   urgency: AgentGlowUrgency;
   isTerminal: boolean;
-  theme: Required<Omit<AgentGlowTheme, 'brand'>> & { brand?: AgentGlowBrandTokens };
-  input: AgentGlowInput;
+  theme: NormalizedAgentGlowTheme;
+  input: Required<Pick<AgentGlowInput, 'speechLevel' | 'inputLevel' | 'activityLevel' | 'progress'>> & { frequencyBands: number[] };
   meta: AgentGlowEventMeta;
   updatedAt: number;
+  reducedMotion: boolean;
 }
 
 export interface AgentGlowControllerOptions {
@@ -130,6 +153,8 @@ export interface AgentGlowControllerOptions {
   input?: AgentGlowInput;
   reducedMotion?: boolean;
   label?: string;
+  now?: () => number;
+  smoothing?: number;
 }
 
 export interface AgentGlowController {
@@ -144,6 +169,40 @@ export interface AgentGlowController {
 
 export type AgentGlowSnapshotListener = (snapshot: AgentGlowSnapshot) => void;
 
+export interface AgentGlowRendererWarning {
+  code: 'webgl-unavailable' | 'low-power-mode' | 'reduced-motion' | 'renderer-fallback' | 'network-disabled';
+  message: string;
+}
+
+export interface AgentGlowRenderOptions {
+  width?: number;
+  height?: number;
+  quality?: AgentGlowQuality;
+  pixelRatio?: number;
+  title?: string;
+}
+
+export interface AgentGlowPresetFrame {
+  preset: AgentGlowPreset;
+  label: string;
+  svg: string;
+  warnings: AgentGlowRendererWarning[];
+  fpsTarget: 60 | 30;
+}
+
+export interface AgentGlowAudioSmoothingOptions {
+  attack?: number;
+  release?: number;
+  silenceThreshold?: number;
+  silenceFrames?: number;
+}
+
+export interface AgentGlowAudioFrame {
+  level: number;
+  bands: number[];
+  silent: boolean;
+}
+
 export declare function createAgentGlowController(options?: AgentGlowControllerOptions): AgentGlowController;
 export declare function getAgentGlowStateMeta(state: AgentGlowState): AgentGlowStateMeta;
-export declare function normalizeAgentGlowTheme(theme?: AgentGlowTheme): AgentGlowSnapshot['theme'];
+export declare function normalizeAgentGlowTheme(theme?: AgentGlowTheme): NormalizedAgentGlowTheme;
