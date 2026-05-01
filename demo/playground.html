@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>AgentGlow Playground</title>
+<style>
+  :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui; background: #05030a; color: #f7f2ff; }
+  body { margin: 0; min-height: 100vh; display: grid; grid-template-columns: 380px 1fr; }
+  aside { padding: 28px; border-right: 1px solid #282238; background: #0b0713; }
+  main { display: grid; place-items: center; padding: 36px; }
+  label { display: grid; gap: 8px; margin: 16px 0; color: #c9c2d8; }
+  select, input, button, textarea { background: #171322; color: #fff; border: 1px solid #3b3350; border-radius: 10px; padding: 10px; }
+  button { cursor: pointer; background: linear-gradient(135deg,#8b5cf6,#22d3ee); border: 0; font-weight: 700; }
+  #stage { width: min(72vmin, 620px); aspect-ratio: 1; display: grid; place-items: center; }
+  textarea { width: 100%; min-height: 130px; }
+  .hint { color:#a8a0b8; font-size: 13px; line-height: 1.5; }
+</style>
+<aside>
+  <h1>AgentGlow</h1>
+  <p class="hint">Switch presets, states, themes, simulated audio, and copy a React snippet. Microphone mode is explicit and off by default.</p>
+  <label>State <select id="state"></select></label>
+  <label>Preset <select id="preset"></select></label>
+  <label>Accent <input id="accent" type="color" value="#8b5cf6" /></label>
+  <label>Audio level <input id="level" type="range" min="0" max="1" step="0.01" value="0.35" /></label>
+  <button id="scenario">Play CrewCmd-style run</button>
+  <button id="copy">Copy React snippet</button>
+  <p class="hint">Keyboard: 1-0 states, [/] presets, Space scenario.</p>
+  <textarea id="snippet" readonly></textarea>
+</aside>
+<main><div id="stage" aria-live="polite"></div></main>
+<script type="module">
+  import { createAgentGlowController, renderAgentGlowToSvg } from '../packages/core/src/index.ts';
+  const states = ['idle','listening','thinking','speaking','tool-running','waiting','blocked','error','success','interrupted'];
+  const presets = ['orb','waveform-halo','constellation','console-pulse','minimal-dot-field'];
+  state.innerHTML = states.map(s => `<option>${s}</option>`).join('');
+  preset.innerHTML = presets.map(s => `<option>${s}</option>`).join('');
+  const glow = createAgentGlowController({ state: 'idle', preset: 'orb' });
+  const draw = () => {
+    glow.setTheme({ shape: preset.value, palette: { accent: accent.value }, contrast: 'auto' });
+    glow.setInput({ speechLevel: state.value === 'speaking' ? Number(level.value) : 0, inputLevel: state.value === 'listening' ? Number(level.value) : 0, activityLevel: ['thinking','tool-running'].includes(state.value) ? Number(level.value) : 0 });
+    glow.setState(state.value);
+    const snap = glow.getSnapshot();
+    stage.innerHTML = renderAgentGlowToSvg(snap, { width: 520, height: 520 }).svg;
+    snippet.value = `<AgentGlow state="${snap.state}" preset="${preset.value}" theme={{ palette: { accent: '${accent.value}' }, mood: 'focused' }} input={{ speechLevel: ${Number(level.value).toFixed(2)} }} />`;
+  };
+  [state,preset,accent,level].forEach(el => el.addEventListener('input', draw));
+  copy.onclick = async () => navigator.clipboard?.writeText(snippet.value);
+  scenario.onclick = async () => { for (const s of ['listening','thinking','tool-running','speaking','success','idle']) { state.value = s; draw(); await new Promise(r => setTimeout(r, 700)); } };
+  addEventListener('keydown', (event) => { if (event.key >= '1' && event.key <= '9') state.value = states[Number(event.key)-1]; if (event.key === '0') state.value = 'interrupted'; if (event.key === ' ') scenario.click(); draw(); });
+  draw();
+</script>
