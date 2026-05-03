@@ -4,6 +4,7 @@ import {
   AGENT_GLOW_STATES,
   createAgentGlowAudioSmoother,
   createAgentGlowController,
+  createAgentGlowCssVars,
   createAgentGlowMockAnalyser,
   getAgentGlowStateMeta,
   normalizeAgentGlowTheme,
@@ -55,4 +56,12 @@ test('mock analyser and renderer presets work offline with visible distinctions'
     assert.match(frame.svg, /<svg role="img"/);
     assert.equal(frame.fpsTarget, 60);
   }
+});
+
+
+test('CSS variable helper exposes normalized theme tokens', () => {
+  const vars = createAgentGlowCssVars({ palette: { accent: '#111111' }, motion: { reduced: true }, shape: 'constellation' });
+  assert.equal(vars['--agentglow-accent'], '#111111');
+  assert.equal(vars['--agentglow-motion-reduced'], 'true');
+  assert.equal(vars['--agentglow-shape'], 'constellation');
 });
