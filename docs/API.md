@@ -67,3 +67,12 @@ node bin/agentglow-render.mjs \
 ```
 
 The CLI renders the final snapshot from a local fixture to SVG and prints a JSON smoke result. It is intended for CI, examples, and quick verification of state/theme fixtures.
+
+### `createAgentGlowCssVars(theme?, prefix?)`
+
+Returns normalized theme tokens as CSS custom properties. This is useful for design-system wrappers that want AgentGlow's renderer, docs, and surrounding chrome to share one palette.
+
+```ts
+const vars = createAgentGlowCssVars({ palette: { accent: '#8B5CF6' } });
+// { '--agentglow-accent': '#8B5CF6', ... }
+```
