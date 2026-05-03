@@ -3,11 +3,21 @@
   "version": "0.1.0",
   "description": "Design-led local-first visual presence SDK for agent-mode interfaces.",
   "type": "module",
-  "main": "./src/index.js",
+  "main": "./packages/core/src/index.ts",
   "exports": {
-    ".": "./packages/core/src/index.ts",
-    "./core": "./packages/core/src/index.ts",
-    "./react": "./packages/react/src/index.ts"
+    ".": {
+      "types": "./packages/core/src/types.ts",
+      "default": "./packages/core/src/index.ts"
+    },
+    "./core": {
+      "types": "./packages/core/src/types.ts",
+      "default": "./packages/core/src/index.ts"
+    },
+    "./react": {
+      "types": "./packages/react/src/index.ts",
+      "default": "./packages/react/src/index.ts"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "bin",
@@ -55,5 +65,6 @@
   },
   "bin": {
     "agentglow-render": "./bin/agentglow-render.mjs"
-  }
+  },
+  "types": "./packages/core/src/types.ts"
 }
