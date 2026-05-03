@@ -1,6 +1,6 @@
 # AgentGlow
 
-A design-led visual presence SDK for agent-mode interfaces.
+A design-led visual presence SDK for agent-mode interfaces — the quiet glow that tells users whether their agent is listening, thinking, speaking, working, waiting, blocked, or celebrating.
 
 AgentGlow is **not** chat UI, and it is not a basic audio waveform. It is the layer that makes an agent feel operationally present: listening, thinking, speaking, running tools, waiting for approval, blocked, interrupted, or done — with themeable visuals, accessibility semantics, and audio-reactive inputs.
 
@@ -8,6 +8,8 @@ AgentGlow is **not** chat UI, and it is not a basic audio waveform. It is the la
 
 ```sh
 pnpm add @agentglow/core @agentglow/react
+# optional local fixture renderer
+npx agentglow-render --fixture tests/fixtures/presence-run.json --out frame.svg
 ```
 
 This repository currently ships a local-first monorepo implementation for `@agentglow/core` and `@agentglow/react`.
@@ -55,9 +57,14 @@ const frame = renderAgentGlowToSvg(glow.getSnapshot());
 - `console-pulse` — operational/tool-running display.
 - `minimal-dot-field` — quiet, brandable fallback.
 
+## Personality
+
+AgentGlow is meant to feel premium without becoming theatrical: calm when idle, focused under load, bright when speaking, precise during tool use, and unmistakably blocked when it needs human help. It gives your product a visual heartbeat without pretending to be the whole assistant.
+
 ## Demo and examples
 
 - Demo playground: [`demo/playground.html`](demo/playground.html)
+- CLI fixture smoke: `node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out frame.svg`
 - CrewCmd / AgentPulse mapping: [`examples/crewcmd`](examples/crewcmd)
 - Recipes: [`docs/RECIPES.md`](docs/RECIPES.md)
 
@@ -84,6 +91,7 @@ See [`docs/API.md`](docs/API.md) and [`docs/architecture.md`](docs/architecture.
 npm test
 npm run check
 npm run build
+node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow.svg
 bash scripts/validate.sh
 ```
 
