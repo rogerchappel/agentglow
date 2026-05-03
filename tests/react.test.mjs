@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AgentGlow, useAgentGlowController } from '../packages/react/src/index.ts';
+import { AgentGlow, renderAgentGlowElementHtml, useAgentGlowController } from '../packages/react/src/index.ts';
 
 test('AgentGlow smoke covers controlled state, theme, audio, and aria', () => {
   const snapshots = [];
@@ -40,4 +40,13 @@ test('reduced motion emits renderer warning and low-power target', () => {
   const element = AgentGlow({ state: 'thinking', reducedMotion: true, quality: 'low-power', onRendererWarning: (warning) => warnings.push(warning) });
   assert.equal(element.snapshot.reducedMotion, true);
   assert.ok(warnings.some((warning) => warning.code === 'reduced-motion'));
+});
+
+
+test('HTML helper wraps serialisable element with accessibility semantics', () => {
+  const element = AgentGlow({ state: 'blocked', ariaLabel: 'Agent needs permission', liveRegion: 'polite', className: 'presence' });
+  const html = renderAgentGlowElementHtml(element);
+  assert.match(html, /role="img"/);
+  assert.match(html, /aria-live="polite"/);
+  assert.match(html, /Agent needs permission/);
 });

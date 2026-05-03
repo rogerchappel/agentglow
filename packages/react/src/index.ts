@@ -106,4 +106,19 @@ export function AgentGlow(props: AgentGlowProps): AgentGlowElementDescription {
   };
 }
 
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>\"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[ch]!);
+}
+
+/**
+ * Convenience renderer for docs, server previews, and fixture tests. Host React
+ * apps can ignore this and render the SVG through their own component shell.
+ */
+export function renderAgentGlowElementHtml(element: AgentGlowElementDescription): string {
+  const className = element.className ? ` class="${escapeHtml(element.className)}"` : '';
+  const live = element.liveRegion !== 'off' ? ` aria-live="${element.liveRegion}"` : '';
+  return `<div role="${element.role}" aria-label="${escapeHtml(element.ariaLabel)}"${live}${className}>${element.svg}</div>`;
+}
+
 export type { AgentGlowController, AgentGlowEvent, AgentGlowInput, AgentGlowPreset, AgentGlowSnapshot, AgentGlowState, AgentGlowTheme, AgentGlowRendererWarning };
