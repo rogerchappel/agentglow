@@ -30,6 +30,23 @@ for (const file of requiredFiles) {
 const architecture = readFileSync('docs/architecture.md', 'utf8');
 const examples = readFileSync('docs/acceptance-examples.md', 'utf8');
 const types = readFileSync('packages/core/src/types.ts', 'utf8');
+const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+
+for (const path of [pkg.main, pkg.types, pkg.bin?.['agentglow-render']]) {
+  if (!path || !existsSync(path)) {
+    throw new Error(`Package metadata points at missing path: ${path}`);
+  }
+}
+
+for (const [key, value] of Object.entries(pkg.exports ?? {})) {
+  const targets = typeof value === 'string' ? [value] : Object.values(value);
+  for (const target of targets) {
+    if (typeof target === 'string' && target.startsWith('./') && !existsSync(target)) {
+      throw new Error(`Package export ${key} points at missing path: ${target}`);
+    }
+  }
+}
+
 
 for (const state of states) {
   for (const [label, content] of [
