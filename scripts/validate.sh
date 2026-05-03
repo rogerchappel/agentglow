@@ -126,6 +126,7 @@ check_file "README.md"
 check_file "AGENTS.md"
 check_file "CONTRIBUTING.md"
 check_file "SECURITY.md"
+check_file "SAFETY.md"
 check_file ".github/pull_request_template.md"
 check_file "scripts/validate.sh"
 
@@ -134,6 +135,8 @@ printf '\nChecking agentglow required directories...\n'
 check_dir ".github"
 check_dir "docs"
 check_dir "scripts"
+check_dir "examples"
+check_dir "tests/fixtures"
 
 printf '\nRunning local project checks where present...\n'
 
@@ -151,6 +154,10 @@ if [ -f "package.json" ]; then
   fi
 else
   note "no package.json detected; skipping JavaScript package scripts"
+fi
+
+if [ -x "bin/agentglow-render.mjs" ] && [ -f "tests/fixtures/presence-run.json" ]; then
+  run_check "CLI fixture render" node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow-validate.svg
 fi
 
 if command -v agent-qc >/dev/null 2>&1; then
