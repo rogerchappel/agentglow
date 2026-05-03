@@ -174,6 +174,8 @@ export interface AgentGlowRendererWarning {
   message: string;
 }
 
+export type AgentGlowCssVars = Record<string, string>;
+
 export interface AgentGlowRenderOptions {
   width?: number;
   height?: number;
@@ -224,3 +226,5 @@ export declare function createAgentGlowController(options?: AgentGlowControllerO
 export declare function getAgentGlowStateMeta(state: AgentGlowState): AgentGlowStateMeta;
 export declare function normalizeAgentGlowTheme(theme?: AgentGlowTheme): NormalizedAgentGlowTheme;
 export declare function mapAgentGlowEventToState(event: AgentGlowEvent): AgentGlowState | undefined;
+
+export declare function createAgentGlowCssVars(theme?: AgentGlowTheme, prefix?: string): AgentGlowCssVars;

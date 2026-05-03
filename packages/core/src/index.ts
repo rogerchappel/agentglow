@@ -7,6 +7,7 @@ import {
   type AgentGlowAudioSmoothingOptions,
   type AgentGlowController,
   type AgentGlowControllerOptions,
+  type AgentGlowCssVars,
   type AgentGlowEvent,
   type AgentGlowEventMeta,
   type AgentGlowInput,
@@ -139,6 +140,32 @@ export function normalizeAgentGlowTheme(theme: AgentGlowTheme = {}): NormalizedA
     contrast,
     ...(theme.brand ? { brand: { ...theme.brand } } : {}),
   };
+}
+
+
+export function createAgentGlowCssVars(theme: AgentGlowTheme = {}, prefix = '--agentglow'): AgentGlowCssVars {
+  const normalized = normalizeAgentGlowTheme(theme);
+  const entries: Record<string, string | number | boolean> = {
+    background: normalized.palette.background,
+    surface: normalized.palette.surface,
+    accent: normalized.palette.accent,
+    'accent-secondary': normalized.palette.accentSecondary,
+    success: normalized.palette.success,
+    warning: normalized.palette.warning,
+    danger: normalized.palette.danger,
+    muted: normalized.palette.muted,
+    text: normalized.palette.text,
+    mood: normalized.mood,
+    shape: normalized.shape,
+    density: normalized.density,
+    glow: normalized.glow,
+    radius: normalized.radius,
+    contrast: normalized.contrast,
+    'motion-intensity': normalized.motion.intensity,
+    'motion-tempo': normalized.motion.tempo,
+    'motion-reduced': normalized.motion.reduced,
+  };
+  return Object.fromEntries(Object.entries(entries).map(([key, value]) => [`${prefix}-${key}`, String(value)]));
 }
 
 export function createAgentGlowController(options: AgentGlowControllerOptions = {}): AgentGlowController {
