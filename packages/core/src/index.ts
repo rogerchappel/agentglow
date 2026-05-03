@@ -3,6 +3,7 @@ export * from './types.ts';
 import {
   AGENT_GLOW_STATES,
   type AgentGlowAudioFrame,
+  type AgentGlowAnalyserLike,
   type AgentGlowAudioSmoothingOptions,
   type AgentGlowController,
   type AgentGlowControllerOptions,
@@ -17,6 +18,7 @@ import {
   type AgentGlowState,
   type AgentGlowStateMeta,
   type AgentGlowTheme,
+  type AgentGlowTimeline,
   type NormalizedAgentGlowTheme,
 } from './types.ts';
 
@@ -92,6 +94,25 @@ function normalizeInput(input: AgentGlowInput = {}, previous?: AgentGlowSnapshot
   };
 }
 
+
+export function mapAgentGlowEventToState(event: AgentGlowEvent): AgentGlowState | undefined {
+  switch (event.type) {
+    case 'presence.state.set': return event.state;
+    case 'presence.turn.started': return event.source === 'user' ? 'listening' : 'thinking';
+    case 'presence.turn.completed': return 'success';
+    case 'presence.turn.interrupted': return 'interrupted';
+    case 'presence.tool.started': return 'tool-running';
+    case 'presence.tool.completed': return 'success';
+    case 'presence.tool.failed': return event.recoverable === false ? 'blocked' : 'error';
+    case 'presence.wait.started': return 'waiting';
+    case 'presence.blocked': return 'blocked';
+    case 'presence.error': return 'error';
+    case 'presence.audio.input':
+    case 'presence.audio.output': return undefined;
+    default: throw new Error(`Unsupported AgentGlow event: ${(event as { type?: string }).type}`);
+  }
+}
+
 export function getAgentGlowStateMeta(state: AgentGlowState): AgentGlowStateMeta {
   if (!AGENT_GLOW_STATES.includes(state)) throw new Error(`Unknown AgentGlow state: ${String(state)}`);
   return STATE_META[state];
@@ -164,17 +185,25 @@ export function createAgentGlowController(options: AgentGlowControllerOptions = 
     send(event: AgentGlowEvent) {
       switch (event.type) {
         case 'presence.state.set': setState(event.state, event.meta); break;
-        case 'presence.turn.started': setState(event.source === 'user' ? 'listening' : 'thinking', event); break;
-        case 'presence.turn.completed': setState('success', event); break;
-        case 'presence.turn.interrupted': setState('interrupted', event); break;
+        case 'presence.turn.started':
+        case 'presence.turn.completed':
+        case 'presence.turn.interrupted': {
+          const nextState = mapAgentGlowEventToState(event);
+          if (nextState) setState(nextState, event);
+          break;
+        }
         case 'presence.audio.input': input = normalizeInput({ inputLevel: event.inputLevel, frequencyBands: event.frequencyBands }, input, options.smoothing); emit(); break;
         case 'presence.audio.output': input = normalizeInput({ speechLevel: event.speechLevel, frequencyBands: event.frequencyBands }, input, options.smoothing); emit(); break;
-        case 'presence.tool.started': setState('tool-running', event); break;
-        case 'presence.tool.completed': setState('success', event); break;
-        case 'presence.tool.failed': setState(event.recoverable === false ? 'blocked' : 'error', event); break;
-        case 'presence.wait.started': setState('waiting', event); break;
-        case 'presence.blocked': setState('blocked', event); break;
-        case 'presence.error': setState('error', event); break;
+        case 'presence.tool.started':
+        case 'presence.tool.completed':
+        case 'presence.tool.failed':
+        case 'presence.wait.started':
+        case 'presence.blocked':
+        case 'presence.error': {
+          const nextState = mapAgentGlowEventToState(event);
+          if (nextState) setState(nextState, event);
+          break;
+        }
         default: throw new Error(`Unsupported AgentGlow event: ${(event as { type?: string }).type}`);
       }
     },
@@ -217,6 +246,32 @@ export function createAgentGlowMockAnalyser(frames: AgentGlowInput[] = []) {
     },
     reset() { index = 0; },
   };
+}
+
+
+export function createAgentGlowTimeline(events: AgentGlowEvent[], options: AgentGlowControllerOptions = {}): AgentGlowTimeline {
+  const controller = createAgentGlowController(options);
+  const initial = controller.getSnapshot();
+  const steps = events.map((event) => {
+    controller.send(event);
+    return { event, snapshot: controller.getSnapshot() };
+  });
+  const final = controller.getSnapshot();
+  controller.destroy();
+  return { initial, steps, final };
+}
+
+export function readAgentGlowAnalyserFrame(analyser: AgentGlowAnalyserLike, options: { bins?: number } = {}): AgentGlowInput {
+  const binCount = Math.max(1, options.bins ?? analyser.frequencyBinCount ?? 32);
+  const frequency = new Uint8Array(binCount);
+  const timeDomain = new Float32Array(binCount);
+  analyser.getByteFrequencyData?.(frequency);
+  analyser.getFloatTimeDomainData?.(timeDomain);
+  const frequencyBands = Array.from(frequency, (value) => clamp(value / 255));
+  const speechLevel = timeDomain.some(Boolean)
+    ? clamp(timeDomain.reduce((sum, sample) => sum + Math.abs(sample), 0) / timeDomain.length)
+    : clamp(frequencyBands.reduce((sum, band) => sum + band, 0) / frequencyBands.length);
+  return { speechLevel, inputLevel: speechLevel, activityLevel: Math.max(speechLevel, ...frequencyBands), frequencyBands };
 }
 
 export async function createMicrophoneAgentGlowInput() {
