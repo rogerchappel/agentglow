@@ -1,0 +1,18 @@
+{
+  "crewcmd": {
+    "palette": { "background": "#06040F", "surface": "#171322", "accent": "#8B5CF6", "accentSecondary": "#22D3EE", "text": "#F7F2FF" },
+    "mood": "focused",
+    "shape": "orb",
+    "density": 0.62,
+    "glow": 0.8,
+    "radius": "balanced",
+    "contrast": "auto"
+  },
+  "incident": {
+    "palette": { "background": "#090205", "accent": "#FB7185", "accentSecondary": "#FBBF24" },
+    "mood": "urgent",
+    "shape": "console-pulse",
+    "motion": { "tempo": "rapid", "intensity": 0.9 },
+    "contrast": "high"
+  }
+}

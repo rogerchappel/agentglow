@@ -1,0 +1,18 @@
+{
+  "name": "CrewCmd approval run",
+  "theme": {
+    "palette": { "accent": "#8B5CF6", "accentSecondary": "#22D3EE" },
+    "mood": "focused",
+    "shape": "console-pulse",
+    "motion": { "intensity": 0.72, "tempo": "measured" }
+  },
+  "events": [
+    { "type": "presence.turn.started", "source": "user", "runId": "run_fixture_001", "message": "Listening for deployment request" },
+    { "type": "presence.state.set", "state": "thinking", "meta": { "runId": "run_fixture_001", "message": "Planning release steps" } },
+    { "type": "presence.tool.started", "toolName": "git.status", "runId": "run_fixture_001", "message": "Inspecting repository" },
+    { "type": "presence.audio.output", "speechLevel": 0.62, "frequencyBands": [0.19, 0.42, 0.78, 0.55] },
+    { "type": "presence.wait.started", "reason": "approval-required", "runId": "run_fixture_001", "message": "Waiting for approval" },
+    { "type": "presence.tool.completed", "toolName": "github.push", "runId": "run_fixture_001", "message": "Published changes" }
+  ],
+  "expectedFinalState": "success"
+}

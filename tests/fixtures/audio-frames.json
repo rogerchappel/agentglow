@@ -1,0 +1,7 @@
+[
+  { "speechLevel": 0.05, "frequencyBands": [0.02, 0.04, 0.06] },
+  { "speechLevel": 0.64, "frequencyBands": [0.31, 0.58, 0.85] },
+  { "speechLevel": 0.12, "frequencyBands": [0.08, 0.11, 0.2] },
+  { "speechLevel": 0, "frequencyBands": [0, 0, 0] },
+  { "speechLevel": 0, "frequencyBands": [0, 0, 0] }
+]
