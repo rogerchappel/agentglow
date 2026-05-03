@@ -8,5 +8,27 @@
       "default": "./src/index.ts"
     }
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rogerchappel/agentglow.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/agentglow/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/agentglow#readme",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "description": "Local-first state, audio, theme, and SVG renderer core for AgentGlow.",
+  "keywords": [
+    "agent-ui",
+    "presence",
+    "svg",
+    "audio-reactive",
+    "local-first"
+  ]
 }

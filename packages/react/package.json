@@ -11,5 +11,26 @@
       "default": "./src/index.ts"
     }
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rogerchappel/agentglow.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/agentglow/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/agentglow#readme",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "description": "React-facing AgentGlow component and controller helper.",
+  "keywords": [
+    "react",
+    "agent-ui",
+    "presence",
+    "agentglow"
+  ]
 }
