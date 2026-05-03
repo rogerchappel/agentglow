@@ -129,6 +129,8 @@ check_file "SECURITY.md"
 check_file "SAFETY.md"
 check_file ".github/pull_request_template.md"
 check_file "scripts/validate.sh"
+check_file "docs/orchestration.json"
+check_file "docs/orchestration.schema.json"
 
 printf '\nChecking agentglow required directories...\n'
 
@@ -154,6 +156,10 @@ if [ -f "package.json" ]; then
   fi
 else
   note "no package.json detected; skipping JavaScript package scripts"
+fi
+
+if [ -f "scripts/check-orchestration.mjs" ]; then
+  run_check "orchestration references" node scripts/check-orchestration.mjs
 fi
 
 if [ -x "bin/agentglow-render.mjs" ] && [ -f "tests/fixtures/presence-run.json" ]; then
