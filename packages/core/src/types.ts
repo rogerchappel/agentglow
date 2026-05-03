@@ -203,6 +203,24 @@ export interface AgentGlowAudioFrame {
   silent: boolean;
 }
 
+export interface AgentGlowTimelineStep {
+  event: AgentGlowEvent;
+  snapshot: AgentGlowSnapshot;
+}
+
+export interface AgentGlowTimeline {
+  initial: AgentGlowSnapshot;
+  steps: AgentGlowTimelineStep[];
+  final: AgentGlowSnapshot;
+}
+
+export interface AgentGlowAnalyserLike {
+  frequencyBinCount?: number;
+  getByteFrequencyData?: (array: Uint8Array) => void;
+  getFloatTimeDomainData?: (array: Float32Array) => void;
+}
+
 export declare function createAgentGlowController(options?: AgentGlowControllerOptions): AgentGlowController;
 export declare function getAgentGlowStateMeta(state: AgentGlowState): AgentGlowStateMeta;
 export declare function normalizeAgentGlowTheme(theme?: AgentGlowTheme): NormalizedAgentGlowTheme;
+export declare function mapAgentGlowEventToState(event: AgentGlowEvent): AgentGlowState | undefined;
