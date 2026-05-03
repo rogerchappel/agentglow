@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rogerchappel/agentglow/docs/orchestration.schema.json",
+  "title": "AgentGlow orchestration plan",
+  "type": "object",
+  "required": ["version", "repository", "product_north_star", "waves", "tasks"],
+  "properties": {
+    "version": { "type": "string" },
+    "repository": { "const": "agentglow" },
+    "product_north_star": { "type": "string", "minLength": 20 },
+    "dispatch_now": { "type": "array", "items": { "type": "string" } },
+    "blocked_tasks": { "type": "array", "items": { "type": "string" } },
+    "waves": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["index", "name", "mode", "dispatch", "tasks"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 1 },
+          "name": { "type": "string" },
+          "mode": { "enum": ["sequential", "concurrent"] },
+          "dispatch": { "type": "string" },
+          "tasks": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "repo", "phase", "risk", "depends_on", "objective", "acceptance_criteria"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^agentglow-" },
+          "title": { "type": "string" },
+          "repo": { "const": "agentglow" },
+          "phase": { "type": "string" },
+          "risk": { "enum": ["low", "medium", "high"] },
+          "depends_on": { "type": "array", "items": { "type": "string" } },
+          "objective": { "type": "string", "minLength": 20 },
+          "acceptance_criteria": { "type": "string", "minLength": 20 }
+        }
+      }
+    }
+  }
+}
