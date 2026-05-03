@@ -43,3 +43,27 @@ The V1 React package exposes stable props and returns an SVG-backed element desc
 ## Presets
 
 V1 preset IDs are `orb`, `waveform-halo`, `constellation`, `console-pulse`, and `minimal-dot-field`. All presets consume the same snapshot shape and must not invent business states.
+
+## Fixture and Timeline Utilities
+
+### `createAgentGlowTimeline(events, options?)`
+
+Replays a local list of `AgentGlowEvent` objects through a controller and returns `{ initial, steps, final }`. This is useful for tests, demos, incident replays, and CLI fixture rendering because it does not need a browser host.
+
+### `mapAgentGlowEventToState(event)`
+
+Returns the visual state implied by an event, or `undefined` for pure audio input events. Apps can use this to inspect routing before mutating a controller.
+
+### `readAgentGlowAnalyserFrame(analyser, options?)`
+
+Accepts an analyser-like object and converts byte-frequency/time-domain data into an `AgentGlowInput` frame. This keeps the microphone boundary explicit: the adapter reads data from an analyser you provide, but it does not request permissions itself.
+
+## CLI
+
+```sh
+node bin/agentglow-render.mjs \
+  --fixture tests/fixtures/presence-run.json \
+  --out /tmp/agentglow.svg
+```
+
+The CLI renders the final snapshot from a local fixture to SVG and prints a JSON smoke result. It is intended for CI, examples, and quick verification of state/theme fixtures.
