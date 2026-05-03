@@ -1,0 +1,17 @@
+{
+  "name": "canonical state matrix",
+  "states": [
+    "idle",
+    "listening",
+    "thinking",
+    "speaking",
+    "tool-running",
+    "waiting",
+    "blocked",
+    "error",
+    "success",
+    "interrupted"
+  ],
+  "minimumDistinctSvgCount": 5,
+  "requiredTerminalStates": ["error", "success", "interrupted"]
+}

@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   createAgentGlowAudioSmoother,
+  createAgentGlowController,
   createAgentGlowTimeline,
   normalizeAgentGlowTheme,
   readAgentGlowAnalyserFrame,
+  renderAgentGlowToSvg,
 } from '../packages/core/src/index.ts';
 
 const loadJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
@@ -43,4 +45,22 @@ test('analyser-like adapter converts frequency data to local input frames', () =
   assert.deepEqual(frame.frequencyBands, [0, 0.25098039215686274, 0.5019607843137255, 1]);
   assert.ok(Math.abs(frame.speechLevel - 0.3) < 0.00001);
   assert.equal(frame.activityLevel, 1);
+});
+
+
+test('canonical state matrix renders accessible distinct frames', () => {
+  const fixture = JSON.parse(readFileSync('tests/fixtures/state-matrix.json', 'utf8'));
+  const rendered = new Set();
+  const terminal = [];
+  for (const state of fixture.states) {
+    const controller = createAgentGlowController({ state });
+    const snapshot = controller.getSnapshot();
+    const frame = renderAgentGlowToSvg(snapshot, { title: snapshot.label });
+    assert.match(frame.svg, /role="img"/);
+    assert.match(frame.svg, new RegExp(snapshot.label));
+    rendered.add(frame.svg.replace(/updatedAt="[^"]+"/g, ''));
+    if (snapshot.isTerminal) terminal.push(state);
+  }
+  assert.ok(rendered.size >= fixture.minimumDistinctSvgCount);
+  assert.deepEqual(terminal, fixture.requiredTerminalStates);
 });
