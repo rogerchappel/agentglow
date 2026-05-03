@@ -9,13 +9,19 @@ format and uses semantic versioning when versioned releases are published.
 
 ### Added
 
-- Initial project setup.
+- Local-first `@agentglow/core` presence controller with canonical states, event mapping, deterministic snapshots, theme normalization, and reduced-motion support.
+- SVG renderer with five presets: orb, waveform halo, constellation, console pulse, and minimal dot field.
+- Audio smoothing, analyser-like frame reading, mock analyser fixtures, and explicit opt-in microphone boundary.
+- React-facing component contract, controller helper, and HTML wrapper helper.
+- Local fixture CLI: `agentglow-render --fixture tests/fixtures/presence-run.json --out frame.svg`.
+- Demo playground, CrewCmd/AgentPulse example, and local Node fixture example.
+- PRD, task plan, orchestration docs, API docs, architecture notes, recipes, accessibility/performance/safety guidance, and fixture tests.
+
+### Verified
+
+- `npm test`, `npm run check`, `npm run build`, `bash scripts/validate.sh`, and real CLI fixture smoke.
 
 ## Release Links
 
-- Unreleased:
-  `https://github.com/rogerchappel/agentglow/compare/...HEAD`
-- Latest release:
-  `https://github.com/rogerchappel/agentglow/releases/latest`
-
-Replace placeholder links once the first release tag exists.
+- Unreleased: `https://github.com/rogerchappel/agentglow/compare/main...HEAD`
+- Latest release: `https://github.com/rogerchappel/agentglow/releases/latest`
