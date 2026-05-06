@@ -7,17 +7,17 @@ AgentGlow is **not** chat UI, and it is not a basic audio waveform. It is the la
 ## Install
 
 ```sh
-pnpm add @agentglow/core @agentglow/react
+npm install agentglow
 # optional local fixture renderer
 npx agentglow-render --fixture tests/fixtures/presence-run.json --out frame.svg
 ```
 
-This repository currently ships a local-first monorepo implementation for `@agentglow/core` and `@agentglow/react`.
+The v0.1 package ships the local-first monorepo runtime as `agentglow`, `agentglow/core`, and `agentglow/react`. Published exports point at built JavaScript plus declaration files, while the TypeScript sources remain included for auditability.
 
 ## Quickstart
 
 ```tsx
-import { AgentGlow } from '@agentglow/react';
+import { AgentGlow } from 'agentglow/react';
 
 export function AssistantPresence() {
   return (
@@ -36,7 +36,7 @@ export function AssistantPresence() {
 ## Core controller
 
 ```ts
-import { createAgentGlowController, renderAgentGlowToSvg } from '@agentglow/core';
+import { createAgentGlowController, renderAgentGlowToSvg } from 'agentglow/core';
 
 const glow = createAgentGlowController({ preset: 'console-pulse' });
 glow.send({ type: 'presence.tool.started', toolName: 'github.createPullRequest' });
@@ -91,6 +91,7 @@ See [`docs/API.md`](docs/API.md) and [`docs/architecture.md`](docs/architecture.
 npm test
 npm run check
 npm run build
+npm run pack:smoke
 node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow.svg
 bash scripts/validate.sh
 ```

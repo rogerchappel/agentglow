@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from 'node:fs';
-import { createAgentGlowTimeline, renderAgentGlowToSvg } from '../packages/core/src/index.ts';
+import { createAgentGlowTimeline, renderAgentGlowToSvg } from '../dist/core/src/index.js';
 
 function usage(exitCode = 0) {
   const out = exitCode === 0 ? console.log : console.error;
