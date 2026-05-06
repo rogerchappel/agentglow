@@ -6,6 +6,12 @@ const requiredFiles = [
   'packages/core/src/types.ts',
   'packages/core/src/index.ts',
   'packages/react/src/index.ts',
+  'dist/index.js',
+  'dist/index.d.ts',
+  'dist/core/src/index.js',
+  'dist/core/src/index.d.ts',
+  'dist/react/src/index.js',
+  'dist/react/src/index.d.ts',
 ];
 
 const states = [
@@ -35,6 +41,20 @@ const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 for (const path of [pkg.main, pkg.types, pkg.bin?.['agentglow-render']]) {
   if (!path || !existsSync(path)) {
     throw new Error(`Package metadata points at missing path: ${path}`);
+  }
+}
+
+const expectedExports = {
+  '.': './dist/index.js',
+  './core': './dist/core/src/index.js',
+  './react': './dist/react/src/index.js',
+};
+
+for (const [key, expectedDefault] of Object.entries(expectedExports)) {
+  const value = pkg.exports?.[key];
+  const actualDefault = typeof value === 'string' ? value : value?.default;
+  if (actualDefault !== expectedDefault) {
+    throw new Error(`Package export ${key} should default to ${expectedDefault}, got ${actualDefault}`);
   }
 }
 

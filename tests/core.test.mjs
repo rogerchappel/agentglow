@@ -10,6 +10,12 @@ import {
   normalizeAgentGlowTheme,
   renderPresetFixture,
 } from '../packages/core/src/index.ts';
+import { createAgentGlowController as createRootAgentGlowController } from '../dist/index.js';
+
+test('built root package facade re-exports the core runtime', () => {
+  const glow = createRootAgentGlowController({ state: 'thinking' });
+  assert.equal(glow.getSnapshot().state, 'thinking');
+});
 
 test('valid states expose metadata and invalid states throw', () => {
   assert.equal(AGENT_GLOW_STATES.length, 10);
