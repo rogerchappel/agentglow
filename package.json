@@ -32,6 +32,10 @@
     "SAFETY.md",
     "CONTRIBUTING.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/agentglow.git"
+  },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "check": "node scripts/check-contract.mjs",
