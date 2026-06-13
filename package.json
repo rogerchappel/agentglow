@@ -30,11 +30,12 @@
     "LICENSE",
     "SECURITY.md",
     "SAFETY.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "CHANGELOG.md"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rogerchappel/agentglow.git"
+    "url": "git+ssh://git@github.com/rogerchappel/agentglow.git"
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
@@ -66,10 +67,6 @@
     "packages/*"
   ],
   "homepage": "https://github.com/rogerchappel/agentglow#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/rogerchappel/agentglow.git"
-  },
   "bugs": {
     "url": "https://github.com/rogerchappel/agentglow/issues"
   },
