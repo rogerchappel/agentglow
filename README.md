@@ -78,6 +78,12 @@ See [`docs/ACCESSIBILITY.md`](docs/ACCESSIBILITY.md) and [`docs/PERFORMANCE.md`]
 
 See [`docs/API.md`](docs/API.md) and [`docs/architecture.md`](docs/architecture.md).
 
+## Limitations
+
+- AgentGlow renders presence state; it does not provide chat orchestration, speech recognition, tool execution, or model routing.
+- Treat the current SVG/runtime contracts as v0.1 surfaces until the visual regression suite and framework adapters are broader.
+- Audio-reactive inputs should be normalized by the host app; AgentGlow does not capture microphone audio or request device permissions.
+
 ## Roadmap
 
 - WebGL/canvas renderer adapters behind the same snapshot contract.
