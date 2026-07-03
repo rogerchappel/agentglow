@@ -44,7 +44,8 @@
     "build": "npm run build:runtime && node scripts/build-smoke.mjs",
     "pack:smoke": "node scripts/pack-smoke.mjs",
     "package:smoke": "npm run pack:smoke",
-    "release:check": "npm run check && npm test && npm run build && npm run package:smoke"
+    "release:check": "npm run check && npm test && npm run build && npm run package:smoke",
+    "lint": "npm run check"
   },
   "keywords": [
     "agent-ui",
