@@ -97,6 +97,7 @@ See [`docs/API.md`](docs/API.md) and [`docs/architecture.md`](docs/architecture.
 npm test
 npm run check
 npm run build
+npm run smoke
 npm run pack:smoke
 node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow.svg
 bash scripts/validate.sh
