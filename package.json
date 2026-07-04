@@ -42,9 +42,10 @@
     "check": "node scripts/check-contract.mjs",
     "build:runtime": "node scripts/build-runtime.mjs",
     "build": "npm run build:runtime && node scripts/build-smoke.mjs",
+    "smoke": "npm run build && node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow-smoke.svg",
     "pack:smoke": "node scripts/pack-smoke.mjs",
     "package:smoke": "npm run pack:smoke",
-    "release:check": "npm run check && npm test && npm run build && npm run package:smoke",
+    "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run package:smoke",
     "lint": "npm run check"
   },
   "keywords": [
