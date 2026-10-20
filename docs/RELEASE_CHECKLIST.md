@@ -4,11 +4,9 @@ Use this before tagging the first public AgentGlow release.
 
 ## Local gates
 
-- [ ] `npm run check`
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `bash scripts/validate.sh`
-- [ ] `node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow.svg`
+Run the complete, non-publishing automated gate with `npm run release:check`. It executes the contract check, tests, runtime build, CLI fixture smoke, and package smoke in sequence, and stops at the first failure. The command only validates locally; it does not create a tag, release, deployment, or package publication.
+
+For targeted diagnosis, the individual gates are `npm run check`, `npm test`, `npm run build`, `npm run smoke`, and `npm run package:smoke`.
 
 ## Product review
 
