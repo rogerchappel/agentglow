@@ -45,7 +45,7 @@
     "smoke": "npm run build && node bin/agentglow-render.mjs --fixture tests/fixtures/presence-run.json --out /tmp/agentglow-smoke.svg",
     "pack:smoke": "node scripts/pack-smoke.mjs",
     "package:smoke": "npm run pack:smoke",
-    "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run package:smoke",
+    "release:check": "node scripts/release-readiness.mjs",
     "lint": "npm run check"
   },
   "keywords": [
